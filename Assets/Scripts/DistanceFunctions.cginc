@@ -208,9 +208,9 @@ float mandelbulb2(float3 pos, float power) {
 // http://www.iquilezles.org/www/articles/menger/menger.htm
 float MengerSponge( in float3 p )
 {
-   float d = sdBox(p, float3(1.0,1.0,1.0));
+   float d = sdBox(p, float3(50.0,50.0,50.0)); // size of box
 
-   float s = 1.0;
+   float s = 0.02; // size of squares in box
    int iterations = 0;
    
    for( int m=0; m<5; m++ )
@@ -324,7 +324,28 @@ float sierpinski(float3 p)
 	return float2((sqrt(dm)-1.0)/r, a/s);
 }
 
-float mandelbox(float3 p)
+float mandelbox(float3 position) {
+    float SCALE = 2.75;
+    float fixedRadius = 1.0;
+    float FR2 = fixedRadius * fixedRadius;
+    float minRadius = 0.5;
+    float MR2 = minRadius * minRadius;
+    float4 scalevec = float4(SCALE, SCALE, SCALE, abs(SCALE)) / MR2;
+    float C1 = abs(SCALE-1.0);
+    float C2 = pow(abs(SCALE), float(1-5));
+    float4 p = float4(position.xyz, 1.0); 
+    float4 p0 = float4(position.xyz, 1.0);  // p.w is knighty's DEfactor
+    for (int i=0; i<5; i++) {
+        p.xyz = clamp(p.xyz *0.5+0.5, 0.0, 1.0) *4.0-2.0 - p.xyz; // box fold: min3, max3, mad3
+        float r2 = dot(p.xyz, p.xyz);  // dp3
+        p.xyzw *= clamp(max(MR2/r2, MR2), 0.0, 1.0);  // sphere fold: div1, max1.sat, mul4
+        p.xyzw = p*scalevec + p0;  // mad4
+    }
+  return (length(p.xyz) - C1) / p.w - C2;
+
+}
+
+float mandelbox2(float3 p)
 {
     float scale = 2;
 	float3 offset = p;
@@ -400,29 +421,36 @@ float kaleidoscopic_IFS(float3 z)
     return (length(z) ) * pow(FRACT_SCALE, -float(FRACT_ITER));
 }
 
-#define SCALE 2.8
-#define MINRAD2 .25
-float minRad2 = clamp(MINRAD2, 1.0e-9, 1.0);
-#define RemnantScale (float4(SCALE, SCALE, SCALE, abs(SCALE)) / minRad2)
-float absScalem1 = abs(SCALE - 1.0);
-float AbsScaleRaisedTo1mIters = pow(abs(SCALE), float(1-10));
+float2x2 rot(float a) {
+	return float2x2(cos(a),sin(a),-sin(a),cos(a));	
+}
+
+float4 formula(float4 p) {
+		p.xz = abs(p.xz+1.)-abs(p.xz-1.)-p.xz;
+		p.y-=.25;
+		float a = 35.0;
+		p.x = cos(a) * p.x + sin(a) * p.y;
+		p.y = -sin(a) * p.x + cos(a) * p.y;
+		p=p*2./clamp(dot(p.xyz,p.xyz),.2,1.);
+	return p;
+}
 
 float RemnantX(float3 pos) 
 {
-    float4 p = float4(pos,1);
-	float4 p0 = p;  // p.w is the distance estimate
-
-	for (int i = 0; i < 9; i++)
-	{
-		p.xyz = clamp(p.xyz, -1.0, 1.0) * 2.0 - p.xyz;
-
-		float r2 = dot(p.xyz, p.xyz);
-		p *= clamp(max(minRad2/r2, minRad2), 0.0, 1.0);
-
-		// scale, translate
-		p = p*RemnantScale + p0;
-	}
-	return ((length(p.xyz) - absScalem1) / p.w - AbsScaleRaisedTo1mIters);
+    float hid=0.;
+	float3 tpos=pos;
+	tpos.z=abs(3.-(tpos.z-6.*floor(tpos.z/6.)));
+	float4 p=float4(tpos,1.);
+	for (int i=0; i<4; i++) {p=formula(p);}
+	float fr=(length(max(float2(0., 0.),p.yz-1.5))-1.)/p.w;
+	float ro=max(abs(pos.x+1.)-.3,pos.y-.35);
+		  ro=max(ro,-max(abs(pos.x+1.)-.1,pos.y-.5));
+	pos.z=abs(.25-(pos.z - .5*floor(pos.z/.5)));
+	
+		  ro=max(ro,-max(abs(pos.z)-.2,pos.y-.3));
+		  ro=max(ro,-max(abs(pos.z)-.01,-pos.y+.32));
+	float d=min(fr,ro);
+	return d;
 }
 
 float tglad_formula(float3 z0)
