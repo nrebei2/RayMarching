@@ -77,7 +77,7 @@ public class RaymarchingCamera : SceneViewFilter
     public Cubemap _ReflectionCube;
 
     public enum Fractal{ StaticMandelbulb, DynamicMandelbulb, Julia, Juliabulb, Sierpinski, Mandelbox, 
-        KaleidoscopicIFS, Tglad, Hartverdrahtet, PseudoKleinian, PseudoKnightyan, Mandelbulb2, MengerSponge, RemnantX }
+        KaleidoscopicIFS, Tglad, Hartverdrahtet, PseudoKleinian, PseudoKnightyan, Mandelbulb2, MengerSponge, apo }
     
     [Header("Signed Distance Field")]
     public Fractal fractal;
@@ -148,7 +148,7 @@ public class RaymarchingCamera : SceneViewFilter
             case Fractal.MengerSponge:
                 _fractalNumber = 12;
                 break;
-            case Fractal.RemnantX:
+            case Fractal.apo:
                 _fractalNumber = 13;
                 break;
         }

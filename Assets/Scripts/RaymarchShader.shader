@@ -161,7 +161,7 @@
                         fractal = float4(_FractalColor.rgb, MengerSponge(p));
                         break;      
                     case 13:
-                        fractal = float4(_FractalColor.rgb, RemnantX(p));
+                        fractal = float4(_FractalColor.rgb, apo(p, .0274, float3(1., 1., 1.3), float3(0., 0., 0.)));
                         break;                                             
                 }
 			    

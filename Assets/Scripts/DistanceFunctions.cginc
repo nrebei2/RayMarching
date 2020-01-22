@@ -435,22 +435,34 @@ float4 formula(float4 p) {
 	return p;
 }
 
-float RemnantX(float3 pos) 
+float apo(float3 pos, float seed, float3 CSize, float3 C) 
 {
-    float hid=0.;
-	float3 tpos=pos;
-	tpos.z=abs(3.-(tpos.z-6.*floor(tpos.z/6.)));
-	float4 p=float4(tpos,1.);
-	for (int i=0; i<4; i++) {p=formula(p);}
-	float fr=(length(max(float2(0., 0.),p.yz-1.5))-1.)/p.w;
-	float ro=max(abs(pos.x+1.)-.3,pos.y-.35);
-		  ro=max(ro,-max(abs(pos.x+1.)-.1,pos.y-.5));
-	pos.z=abs(.25-(pos.z - .5*floor(pos.z/.5)));
-	
-		  ro=max(ro,-max(abs(pos.z)-.2,pos.y-.3));
-		  ro=max(ro,-max(abs(pos.z)-.01,-pos.y+.32));
-	float d=min(fr,ro);
-	return d;
+  float dist;
+  //vec3 CSize = vec3(1., 1., 1.3);
+  float3 p = pos.xzy;
+  float scale = 1.0;
+ // p *= cFcRot;
+  float r2 = 0.;
+  float k = 0.;
+  //float uggg = 0.;
+  for( int i=0; i < 12;i++ )
+  {
+      p = 2.0*clamp(p, -CSize, CSize) - p;
+      r2 = dot(p,p);
+      //r2 = dot(p,p+sin(p.z*.3)); //Alternate fractal
+      k = max((2.0)/(r2), seed); //.378888 //.13345 max((2.6)/(r2), .03211); //max((1.8)/(r2), .0018);
+      p     *= k;
+      scale *= k;
+      //uggg += r2;
+      p+=C;
+       //p.xyz = vec3(-1.0*p.z,1.0*p.x,1.0*p.y);
+  }
+  float l = length(p.xy);
+  float rxy = l - 4.0;
+  float n = 1.0 * p.z;
+  rxy = max(rxy, -(n) / 4.);
+  dist = (rxy) / abs(scale);
+  return dist;
 }
 
 float tglad_formula(float3 z0)
