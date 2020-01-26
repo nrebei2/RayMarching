@@ -162,7 +162,13 @@
                         break;      
                     case 13:
                         fractal = float4(_FractalColor.rgb, apo(p, .0274, float3(1., 1., 1.3), float3(0., 0., 0.)));
-                        break;                                             
+                        break; 
+                    case 14:
+                        fractal = float4(_FractalColor.rgb, sdPlane(p, float4(0,1,0,0)));
+                        break;    
+                    case 15:
+                        fractal = float4(_FractalColor.rgb, FCT_BBSK(p));     
+                        break;                          
                 }
 			    
                 return fractal;

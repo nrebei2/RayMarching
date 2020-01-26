@@ -77,7 +77,6 @@ float4 printBulb(float4 d1, float k) {
 	return float4(color, dist);
 }
 
-
 // Subtraction
 float opSS(float d1, float d2, float k) {
 	float h = clamp(0.5 - 0.5 * (d2 + d1) / k, 0.0, 1.0);
@@ -433,6 +432,52 @@ float4 formula(float4 p) {
 		p.y = -sin(a) * p.x + cos(a) * p.y;
 		p=p*2./clamp(dot(p.xyz,p.xyz),.2,1.);
 	return p;
+}
+
+// TODO: implement FCT_BBSK (first level of Yeomada)
+
+float FCT_BBSK(float3 pos) {
+    float3 cFcParams = float3(2.18, -0.18, 0);
+    float3 CSize = float3(1.4,0.87, 1.1);
+    float3 p = pos.xzy * 2.0;
+    float scale = 1.0;
+    
+    for( int i=0; i < 4;i++ )
+    {
+        p = 2.0*clamp(p, -CSize, CSize) - p;
+        float r2 = dot(p,p);
+        //float r2 = dot(p,p+sin(p.z*.5)); //Alternate fractal
+        float k = max((2.)/(r2), .17);
+        p *= k;
+        //p *=rot;
+        //p= p.yzx;
+        p+=float3(0.2,0.2,-0.5);
+        scale *= k;
+    }
+
+    p = 2.0*clamp(p, -CSize * 4., CSize * 4.) - p;
+   
+    for( int i=0; i < 8;i++ )
+    {
+        p = 2.0*clamp(p, -CSize, CSize) - p;
+        float r2 = dot(p,p);
+        //float r2 = dot(p,p+sin(p.z*.3)); //Alternate fractal
+        float k = max((cFcParams.x)/(r2),  0.027);
+        p     *= k;
+        scale *= k;
+        p.y += cFcParams.y;
+    }
+    
+    float l = length(p.xy);
+    //l = mix(l,l2,0.5);
+    float rxy = l - 4.0;
+    float n = 1.0 * p.z;
+    rxy = max(rxy, -(n) / 4.);
+    float dist = (rxy) / abs(scale);
+    dist *=.75;
+
+    return dist;
+
 }
 
 float apo(float3 pos, float seed, float3 CSize, float3 C) 

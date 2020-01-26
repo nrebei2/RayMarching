@@ -42,7 +42,7 @@ public class RaymarchingCamera : SceneViewFilter
     public float _maxDistance;
     [Range(1,3000)]
     public int _MaxIterations;
-    [Range(0.1f, 0.0001f)]
+    [Range(1f, 0.0001f)]
     public float _Accuracy;
 
     [Header("Directional Light")]
@@ -77,7 +77,7 @@ public class RaymarchingCamera : SceneViewFilter
     public Cubemap _ReflectionCube;
 
     public enum Fractal{ StaticMandelbulb, DynamicMandelbulb, Julia, Juliabulb, Sierpinski, Mandelbox, 
-        KaleidoscopicIFS, Tglad, Hartverdrahtet, PseudoKleinian, PseudoKnightyan, Mandelbulb2, MengerSponge, apo }
+        KaleidoscopicIFS, Tglad, Hartverdrahtet, PseudoKleinian, PseudoKnightyan, Mandelbulb2, MengerSponge, apo, plane, FCT_BBSK }
     
     [Header("Signed Distance Field")]
     public Fractal fractal;
@@ -150,6 +150,12 @@ public class RaymarchingCamera : SceneViewFilter
                 break;
             case Fractal.apo:
                 _fractalNumber = 13;
+                break;
+            case Fractal.plane:
+                _fractalNumber = 14;
+                break;
+            case Fractal.FCT_BBSK:
+                _fractalNumber = 15;
                 break;
         }
 

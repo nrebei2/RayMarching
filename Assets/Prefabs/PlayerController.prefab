@@ -172,31 +172,31 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _shader: {fileID: 4800000, guid: d7291185e78d6e34ab7b5de73abdd277, type: 3}
-  _maxDistance: 100
+  _maxDistance: 1225.66
   _MaxIterations: 3000
   _Accuracy: 0.0001
   _directionalLight: {fileID: 0}
   _LightCol: {r: 1, g: 1, b: 1, a: 0}
   _LightIntensity: 1
   _ShadowIntensity: 0
-  _ShadowDistance: {x: 0.1, y: 100}
+  _ShadowDistance: {x: 0, y: 0}
   _ShadowPenumbra: 1
-  _AoStepsize: 0.01
-  _AoIterations: 1
-  _AoInstensity: 0
+  _AoStepsize: 0.55
+  _AoIterations: 2
+  _AoInstensity: 0.432
   _ReflectionCount: 0
   _ReflectionIntensity: 0
   _EnvReflIntenisty: 0
   _ReflectionCube: {fileID: 8900000, guid: ea3314b6cdc45b54faf15667483da866, type: 3}
-  fractal: 12
+  fractal: 14
   _fractal: {x: 0, y: 0, z: 0, w: 0}
   _fractalSmooth: 0
   _fractaldegreeRotate: {x: 0, y: 0, z: 0}
-  _power: 8.37
-  _FractalColor: {r: 0.42745098, g: 0.6784314, b: 0.83137256, a: 0}
-  _ColorIntensity: 0.91
+  _power: 3.01
+  _FractalColor: {r: 0, g: 0.47852516, b: 1, a: 0}
+  _ColorIntensity: 1.46
   _modBool: {x: 0, y: 0, z: 0}
-  _modInterval: {x: 2, y: 2, z: 2}
+  _modInterval: {x: 10, y: 10, z: 10}
 --- !u!1 &6607057810349772612
 GameObject:
   m_ObjectHideFlags: 0
@@ -226,7 +226,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6607057810349772612}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -2.786, y: 3.69, z: 0}
   m_LocalScale: {x: 1, y: 1.5, z: 1}
   m_Children:
   - {fileID: 6607057810751048383}
